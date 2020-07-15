@@ -3,9 +3,9 @@
 
 This is a tiny web app that generates pixel sprite sheets based on a template.
 
-| | | | |
-|:---:|:---:|:---:|:---:|
-| <img src="./assets/pirot.jpg"> | <img src="./assets/pirot-cilim.jpg"> | <img src="./assets/grandmatiles.jpg"> | <img src="./assets/greatgrandmatiles.jpg"> |
+| | | | | | | | | | | | |
+|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
+| <img src="./assets/1.jpg"> | <img src="./assets/2.jpg"> | <img src="./assets/3.jpg"> | <img src="./assets/4.jpg"> | <img src="./assets/5.jpg"> | <img src="./assets/6.jpg"> | <img src="./assets/7.jpg"> | <img src="./assets/8.jpg"> | <img src="./assets/9.jpg"> | <img src="./assets/10.jpg"> |
 
 # Demo
 Try out the live demo http://artbit.github.io/html5-mandala/
