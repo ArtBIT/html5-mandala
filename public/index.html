@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width">
+        <title>Mandala maker</title>
+        <style type="text/css" media="screen">
+            body {
+              background: #DDD;
+              display: flex;
+              min-height: 100vh;
+              justify-content: center;
+              align-items: center;
+            }
+            .stage-wrapper {
+              background: #BBB;
+              padding: 16px;
+              box-sizing: border-box;
+              box-shadow: inset 0px 0px 43px 0px rgba(0,0,0,0.75);
+            }
+        </style>
+        <script src="./bundle.js"></script>
+    </head>
+    <body>
+        <div class="stage-wrapper"><canvas id="stage" width="2048" height="2048" style="width:512px;height:512px"></canvas></div>
+        <script charset="utf-8">
+           new MandalaApp('#stage'); 
+        </script>
+    </body>
+</html>
