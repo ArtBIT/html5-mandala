@@ -4,7 +4,7 @@ class Gui {
     constructor(params) {
         this.listeners = {};
         this.config = params;
-        this.gui = new gui.GUI();
+        this.gui = new gui.GUI({ load: JSON });
 
         const handle = name => value => {
             this.triggerChange(name, value);
@@ -45,18 +45,23 @@ class Gui {
             .onChange(handle("symmetries"));
         guiPattern
             .add(params, "patternScale")
+            .name("scale")
             .min(0.05)
             .max(4)
             .step(0.05)
             .onChange(handle("patternScale"));
         guiPattern
             .add(params, "patternAngle")
+            .name("angle")
             .min(0)
             .max(360)
             .onChange(handle("patternAngle"));
-
         guiPattern.addColor(params, "offset").onChange(handle("offset"));
+        guiPattern.add(params, "file").name("Load file...");
+
         guiPattern.open();
+
+        this.gui.remember(this.config);
     }
     addEventListener(eventName, eventCallback) {
         this.listeners[eventName] = this.listeners[eventName] || [];

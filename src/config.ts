@@ -8,4 +8,5 @@ export default function Config(params) {
     this.patternScale = params.patternScale || 1;
     this.patternAngle = params.patternAngle || 0;
     this.symmetries = params.symmetries || 7;
+    this.file = () => document.getElementById("patternFile").click();
 }

@@ -23,6 +23,9 @@ class MandalaApp {
                 isDragging = true;
             }
         });
+        document.getElementById("patternFile").addEventListener("change", e => {
+            this.onFileChange(e.target.files[0]);
+        });
         document.addEventListener("mouseup", e => {
             isDragging = false;
         });
@@ -50,14 +53,7 @@ class MandalaApp {
         window.addEventListener("drop", e => {
             e.preventDefault();
             const file = e.dataTransfer.files[0];
-            const img = new Image();
-            img.src = URL.createObjectURL(file);
-            img.addEventListener("load", () => {
-                this.mandala.setPattern(
-                    this.stage.ctx.createPattern(img, "repeat")
-                );
-                this.render();
-            });
+            this.onFileChange(file);
         });
         this.gui.addEventListener("change", ({ name, value }) => {
             switch (name) {
@@ -80,9 +76,23 @@ class MandalaApp {
             this.render();
         });
     }
+    onFileChange(file) {
+        if (!file) {
+            return;
+        }
+        const img = new Image();
+        img.src = URL.createObjectURL(file);
+        img.addEventListener("load", () => {
+            this.mandala.setPattern(
+                this.stage.ctx.createPattern(img, "repeat")
+            );
+            this.render();
+        });
+    }
     render() {
         clearTimeout(this.renderTimeout);
         this.renderTimeout = setTimeout(() => {
+            this.stage.clear();
             this.mandala.render(this.stage.ctx, this.config);
         }, 1);
     }
