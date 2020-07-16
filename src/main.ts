@@ -2,6 +2,7 @@ import Mandala from "./mandala";
 import Stage from "./stage";
 import Gui from "./gui";
 import Config from "./config";
+import { on } from "./helpers";
 
 class MandalaApp {
     constructor(node) {
@@ -18,18 +19,18 @@ class MandalaApp {
     }
     bindEvents() {
         let isDragging = false;
-        this.stage.canvas.addEventListener("mousedown", e => {
+        on(document.getElementById("patternFile"), "change", e => {
+            this.onFileChange(e.target.files[0]);
+        });
+        on(this.stage.canvas, "mousedown", e => {
             if (e.button === 0) {
                 isDragging = true;
             }
         });
-        document.getElementById("patternFile").addEventListener("change", e => {
-            this.onFileChange(e.target.files[0]);
-        });
-        document.addEventListener("mouseup", e => {
+        on(document, "mouseup", e => {
             isDragging = false;
         });
-        document.addEventListener("mousemove", e => {
+        on(document, "mousemove", e => {
             if (!isDragging) {
                 return;
             }
@@ -45,17 +46,42 @@ class MandalaApp {
                 });
             }
         });
-        this.stage.canvas.addEventListener("wheel", e => {
+        const lastPosition = { x: undefined, y: undefined };
+        on(this.stage.canvas, "touchstart", e => {
+            isDragging = true;
+            const touch = event.changedTouches[0];
+            lastPosition.x = touch.clientX;
+            lastPosition.y = touch.clientY;
+        });
+        on(document, "touchend touchcancel", e => {
+            isDragging = false;
+        });
+        on(document, "touchmove", e => {
+            if (!isDragging) {
+                return;
+            }
+            const touch = event.changedTouches[0];
+            const movementX = touch.clientX - lastPosition.x;
+            const movementY = touch.clientY - lastPosition.y;
+            lastPosition.x = touch.clientX;
+            lastPosition.y = touch.clientY;
+            const offset = this.gui.getValue("offset");
+            this.gui.setValue("offset", {
+                s: offset.s - movementY / this.stage.height,
+                v: offset.v - movementX / this.stage.width
+            });
+        });
+        on(this.stage.canvas, "wheel", e => {
             e.preventDefault();
             this.gui.increaseValue("patternScale", e.deltaY * -0.001);
         });
-        window.ondragover = e => e.preventDefault();
-        window.addEventListener("drop", e => {
+        on(window, "dragover", e => e.preventDefault());
+        on(window, "drop", e => {
             e.preventDefault();
             const file = e.dataTransfer.files[0];
             this.onFileChange(file);
         });
-        this.gui.addEventListener("change", ({ name, value }) => {
+        on(this.gui, "change", ({ name, value }) => {
             switch (name) {
                 case "patternAngle":
                     this.mandala.setRotation(value);

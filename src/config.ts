@@ -9,4 +9,13 @@ export default function Config(params) {
     this.patternAngle = params.patternAngle || 0;
     this.symmetries = params.symmetries || 7;
     this.file = () => document.getElementById("patternFile").click();
+    this.save = () => {
+        const a = document.createElement("a");
+        a.download = "mandala.png";
+        a.href = document
+            .getElementById("stage")
+            .toDataURL("image/png")
+            .replace(/^data:image\/[^;]/, "data:application/octet-stream");
+        a.click();
+    };
 }

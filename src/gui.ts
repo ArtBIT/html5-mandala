@@ -57,7 +57,8 @@ class Gui {
             .max(360)
             .onChange(handle("patternAngle"));
         guiPattern.addColor(params, "offset").onChange(handle("offset"));
-        guiPattern.add(params, "file").name("Load file...");
+        guiPattern.add(params, "file").name("Load pattern...");
+        guiPattern.add(params, "save").name("Save image...");
 
         guiPattern.open();
 
