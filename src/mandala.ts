@@ -20,9 +20,19 @@ class Mandala {
         if (!this.pattern) {
             return;
         }
-        this.pattern.setTransform(
-            this.matrix.scale(this.scale).rotate(this.rotation)
-        );
+        try {
+            this.pattern.setTransform(
+                this.matrix.scale(this.scale).rotate(this.rotation)
+            );
+        } catch (e) {
+            // Firefox does not support DOMMatrix
+            this.matrix = document
+                .createElementNS("http://www.w3.org/2000/svg", "svg")
+                .createSVGMatrix();
+            this.pattern.setTransform(
+                this.matrix.scale(this.scale).rotate(this.rotation)
+            );
+        }
     }
     render(ctx, params) {
         const width = ctx.canvas.width;
