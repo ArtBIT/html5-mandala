@@ -59,10 +59,25 @@ class Gui {
         guiPattern.addColor(params, "offset").onChange(handle("offset"));
         guiPattern.add(params, "file").name("Load pattern...");
         guiPattern.add(params, "save").name("Save image...");
+        guiPattern
+            .add(params, "randomize")
+            .name("Randomize")
+            .onChange(() => {
+                this.updateDisplay(this.gui);
+                this.triggerChange("randomize");
+            });
 
         guiPattern.open();
 
         this.gui.remember(this.config);
+    }
+    updateDisplay(gui) {
+        for (var i in gui.__controllers) {
+            gui.__controllers[i].updateDisplay();
+        }
+        for (var f in gui.__folders) {
+            this.updateDisplay(gui.__folders[f]);
+        }
     }
     addEventListener(eventName, eventCallback) {
         this.listeners[eventName] = this.listeners[eventName] || [];

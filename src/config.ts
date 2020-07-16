@@ -18,4 +18,13 @@ export default function Config(params) {
             .replace(/^data:image\/[^;]/, "data:application/octet-stream");
         a.click();
     };
+    this.randomize = () => {
+        this.scale = Math.ceil(Math.random() * 4);
+        this.angle = Math.floor(Math.random() * 360);
+        this.offset.s = Math.random();
+        this.offset.v = Math.random();
+        this.patternScale = Math.random() * 4;
+        this.patternAngle = Math.floor(Math.random() * 360);
+        this.symmetries = Math.floor(Math.random() * 16) + 4;
+    };
 }

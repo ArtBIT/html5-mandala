@@ -17,6 +17,9 @@ class Mandala {
         this.update();
     }
     update() {
+        if (!this.pattern) {
+            return;
+        }
         this.pattern.setTransform(
             this.matrix.scale(this.scale).rotate(this.rotation)
         );
