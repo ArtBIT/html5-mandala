@@ -2,6 +2,7 @@ import Mandala from "./mandala";
 import Stage from "./stage";
 import Gui from "./gui";
 import Config from "./config";
+import Recorder from "./recorder";
 import { on } from "./helpers";
 
 class MandalaApp {
@@ -10,6 +11,7 @@ class MandalaApp {
         this.config = new Config();
         this.gui = new Gui(this.config);
         this.mandala = new Mandala();
+        this.recorder = new Recorder();
 
         this.stage = new Stage(canvas);
         this.stage.clear("white");
@@ -98,8 +100,21 @@ class MandalaApp {
                 case "height":
                     this.stage.setHeight(value);
                     break;
+                case "randomize":
+                    this.mandala.setScale(this.config.patternScale);
+                    this.mandala.setRotation(this.config.patternRotation);
+                    break;
             }
             this.render();
+        });
+        on(this.gui, "action", ({ name, value }) => {
+            switch (name) {
+                case "record":
+                    this.recorder
+                        .record(this.mandala, this.stage, this.config)
+                        .then(() => this.gui.updateDisplay());
+                    break;
+            }
         });
     }
     onFileChange(file) {

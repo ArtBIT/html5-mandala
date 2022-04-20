@@ -19,7 +19,6 @@ export default function Config(params) {
         a.click();
     };
     this.randomize = () => {
-        this.scale = Math.ceil(Math.random() * 4);
         this.angle = Math.floor(Math.random() * 360);
         this.offset.s = Math.random();
         this.offset.v = Math.random();
@@ -27,4 +26,25 @@ export default function Config(params) {
         this.patternAngle = Math.floor(Math.random() * 360);
         this.symmetries = Math.floor(Math.random() * 16) + 4;
     };
+    this.snapshot = () => ({
+        angle: this.angle,
+        offset: {
+            h: this.offset.h,
+            s: this.offset.s,
+            v: this.offset.v
+        },
+        patternScale: this.patternScale,
+        patternAngle: this.patternAngle,
+        symmetries: this.symmetries
+    });
+    // animation
+    this.totalFrames = params.totalFrames || 100;
+    this.fps = params.fps || 30;
+    this.record = () => {};
+    this.startFrame = this.snapshot();
+    this.setStartFrame = () => (this.startFrame = this.snapshot());
+    this.endFrame = this.snapshot();
+    this.pingPong = false;
+    this.setEndFrame = () => (this.endFrame = this.snapshot());
+    this.easing = "linear";
 }

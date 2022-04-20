@@ -27,7 +27,8 @@
     },
     "homepage": "https://github.com/ArtBIT/html5-mandala#readme",
     "dependencies": {
-        "dat.gui": "^0.7.7"
+        "dat.gui": "^0.7.7",
+        "webm-writer": "^1.0.0"
     },
     "devDependencies": {
         "esbuild": "^0.5.26",

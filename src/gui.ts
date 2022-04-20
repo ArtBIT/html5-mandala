@@ -1,4 +1,5 @@
 import gui from "dat.gui";
+import Easing from "./easing";
 
 class Gui {
     constructor(params) {
@@ -63,15 +64,47 @@ class Gui {
             .add(params, "randomize")
             .name("Randomize")
             .onChange(() => {
-                this.updateDisplay(this.gui);
+                this.updateDisplay();
                 this.triggerChange("randomize");
             });
 
         guiPattern.open();
 
+        const guiAnimation = this.gui.addFolder("Animation");
+        guiAnimation
+            .add(params, "totalFrames")
+            .name("Total frames")
+            .min(1)
+            .max(600)
+            .step(1)
+            .onChange(handle("totalFrames"));
+        guiAnimation
+            .add(params, "fps")
+            .min(1)
+            .max(60)
+            .step(1)
+            .onChange(handle("fps"));
+        guiAnimation.add(params, "pingPong").name("Ping pong");
+        guiAnimation
+            .add(params, "setStartFrame")
+            .name("Set current params as Start Frame");
+        guiAnimation
+            .add(params, "setEndFrame")
+            .name("Set current params as End Frame");
+        guiAnimation.add(params, "easing", Object.keys(Easing)).name("Easing");
+        guiAnimation
+            .add(params, "record")
+            .name("Record...")
+            .onChange(() => {
+                this.updateDisplay();
+                this.trigger("action", "record");
+            });
+        guiAnimation.open();
+
         this.gui.remember(this.config);
     }
     updateDisplay(gui) {
+        gui = gui || this.gui;
         for (var i in gui.__controllers) {
             gui.__controllers[i].updateDisplay();
         }
@@ -89,12 +122,14 @@ class Gui {
             callback => callback !== eventCallback
         );
     }
-    triggerChange(name, value) {
-        const type = "change";
+    trigger(type, name, value) {
         this.listeners[type] &&
             this.listeners[type].forEach(callback =>
                 callback({ type, name, value })
             );
+    }
+    triggerChange(name, value) {
+        this.trigger("change", name, value);
     }
     getValue(name) {
         return this.config[name];
