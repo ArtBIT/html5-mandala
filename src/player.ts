@@ -1,4 +1,4 @@
-import Easing, { PingPong } from "./easing";
+import Easing from "./easing";
 import Events from "./events";
 
 class Player extends Events {
@@ -12,7 +12,6 @@ class Player extends Events {
         } else {
             this.ctx = stage.ctx;
         }
-        this.pingPong = config.pingPong;
         this.keyframes = [...config.keyframes];
         if (config.firstFrameAsLastFrame) {
             this.keyframes.push(this.keyframes[0]);
@@ -42,9 +41,6 @@ class Player extends Events {
         }
         const frame = this.keyframes[this.currentKeyframe];
         this.easing = Easing[frame.easing];
-        if (this.pingPong) {
-            this.easing = PingPong(this.easing);
-        }
     }
     interpolate(from, to, t) {
         const k = this.easing(t);

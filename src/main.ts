@@ -84,22 +84,44 @@ class MandalaApp {
             const file = e.dataTransfer.files[0];
             this.onFileChange(file);
         });
+        const editInAllKeyframes = (name, value) => {
+            if (this.config.editAllKeyframes) {
+                this.config.keyframes.forEach(kf => (kf[name] = value));
+            }
+        };
         on(this.gui, "change", ({ name, value: { value } }) => {
             switch (name) {
                 case "patternAngle":
                     this.mandala.setRotation(value);
+                    editInAllKeyframes(name, value);
                     break;
                 case "patternScale":
                     this.mandala.setScale(value);
+                    editInAllKeyframes(name, value);
                     break;
                 case "scale":
                     this.stage.setScale(value);
+                    editInAllKeyframes(name, value);
                     break;
                 case "width":
                     this.stage.setWidth(value);
                     break;
                 case "height":
                     this.stage.setHeight(value);
+                    break;
+                case "editAllKeyframes":
+                    if (value) {
+                        document.body.classList.add("warning");
+                    } else {
+                        document.body.classList.remove("warning");
+                    }
+                    break;
+                case "duration":
+                case "angle":
+                case "offset":
+                case "symmetries":
+                case "easing":
+                    editInAllKeyframes(name, value);
                     break;
             }
             this.render();

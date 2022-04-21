@@ -106,8 +106,7 @@ class Gui extends Events {
                 max: 600,
                 step: 1
             })
-            .on("change", handle("totalFrames"));
-        guiAnimation.addInput(params, "pingPong", { label: "Ping pong" });
+            .on("change", handle("duration"));
         guiAnimation
             .addInput(params, "easing", {
                 label: "Easing",
@@ -221,6 +220,11 @@ class Gui extends Events {
             })
             .on("change", handle("fps"));
         guiAnimation.addInput(params, "loop", { label: "Loop" });
+        guiAnimation
+            .addInput(params, "editAllKeyframes", {
+                label: "Edit All Keyframes"
+            })
+            .on("change", handle("editAllKeyframes"));
         guiAnimation.addInput(params, "firstFrameAsLastFrame", {
             label: "First frame as last"
         });

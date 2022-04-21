@@ -28,6 +28,7 @@ export default function Config(params) {
     this.keyframes = [];
     this.keyframeClipboard = undefined;
     this.fps = params.fps || 30;
+    this.editAllKeyframes = false;
     this.duration = this.fps;
     this.totalKeyframes = 0;
     this.currentKeyframe = 0;
@@ -98,6 +99,5 @@ export default function Config(params) {
         this.currentKeyframe = 0;
     };
     this.record = () => {};
-    this.pingPong = false;
     this.easing = "linear";
 }
