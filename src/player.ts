@@ -1,8 +1,8 @@
 import Easing, { PingPong } from "./easing";
-import Video from "./video";
+import Events from "./events";
 
-class Recorder {
-    record(mandala, stage, config) {
+class Player extends Events {
+    play(mandala, stage, config) {
         this.mandala = mandala;
         if (window.OffscreenCanvas) {
             this.ctx = new OffscreenCanvas(
@@ -12,22 +12,33 @@ class Recorder {
         } else {
             this.ctx = stage.ctx;
         }
-        this.video = new Video({ frameRate: config.fps });
         this.pingPong = config.pingPong;
+        this.keyframes = [...config.keyframes];
+        if (config.firstFrameAsLastFrame) {
+            this.keyframes.push(this.keyframes[0]);
+        }
         this.currentFrame = 0;
-        this.keyframes = config.keyframes;
         this.currentKeyframe = -1;
         this.nextKeyframe();
-        return new Promise(resolve => {
-            this.resolve = resolve;
-            this.render();
-        });
+        this.trigger("started", this);
+        this.delay = config.isRecordingAnimation ? 1 : 1000 / config.fps;
+        this.loop = config.loop;
+        this.isPlaying = true;
+        this.render();
+    }
+    stop() {
+        this.isPlaying = false;
     }
     nextKeyframe() {
         this.currentKeyframe++;
         this.currentFrame = 0;
         if (this.currentKeyframe >= this.keyframes.length - 1) {
-            return;
+            if (!this.loop) {
+                return;
+            }
+            this.currentFrame = 0;
+            this.currentKeyframe = -1;
+            return this.nextKeyframe();
         }
         const frame = this.keyframes[this.currentKeyframe];
         this.easing = Easing[frame.easing];
@@ -52,10 +63,12 @@ class Recorder {
     }
     render() {
         clearTimeout(this.renderTimeout);
+        if (!this.isPlaying) {
+            return;
+        }
         this.renderTimeout = setTimeout(() => {
             if (this.currentKeyframe >= this.keyframes.length - 1) {
-                this.video.save();
-                this.resolve();
+                this.trigger("ended", this);
                 return;
             }
             const from = this.keyframes[this.currentKeyframe];
@@ -71,14 +84,14 @@ class Recorder {
             this.mandala.setScale(params.patternScale);
             this.mandala.setRotation(params.patternAngle);
             this.mandala.render(this.ctx, params);
-            this.video.addFrame(this.ctx.canvas);
+            this.trigger("change", this);
             this.currentFrame++;
             if (this.currentFrame > from.duration) {
                 this.nextKeyframe();
             }
             this.render();
-        }, 1);
+        }, this.delay);
     }
 }
 
-export default Recorder;
+export default Player;

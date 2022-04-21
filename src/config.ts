@@ -8,6 +8,13 @@ export default function Config(params) {
     this.patternScale = params.patternScale || 1;
     this.patternAngle = params.patternAngle || 0;
     this.symmetries = params.symmetries || 7;
+
+    this.isPlayingAnimation = false;
+    this.isRecordingAnimation = false;
+    this.isBusy = false;
+    this.loop = false;
+    this.firstFrameAsLastFrame = false;
+
     this.randomize = () => {
         this.angle = Math.floor(Math.random() * 360);
         this.offset.x = Math.random();

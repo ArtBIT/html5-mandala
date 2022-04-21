@@ -1,9 +1,11 @@
 import { Pane } from "tweakpane";
 import * as EssentialsPlugin from "@tweakpane/plugin-essentials";
 import Easing from "./easing";
+import Events from "./events";
 
-class Gui {
+class Gui extends Events {
     constructor(params) {
+        super();
         this.listeners = {};
         this.config = params;
         this.gui = new Pane({ load: JSON });
@@ -121,6 +123,8 @@ class Gui {
             step: 1
         });
         let newButton,
+            playButton,
+            stopButton,
             renderButton,
             nextButton,
             prevButton,
@@ -130,7 +134,26 @@ class Gui {
             pasteButton,
             randomizeButton;
         this.updateAnimationGui = () => {
-            renderButton.disabled = this.config.keyframes.length < 2;
+            if (this.config.isPlayingAnimation) {
+                playButton.hidden = true;
+                stopButton.hidden = false;
+            } else {
+                playButton.hidden = false;
+                stopButton.hidden = true;
+            }
+            const isBusy =
+                this.config.isPlayingAnimation ||
+                this.config.isRecordingAnimation ||
+                this.config.isBusy;
+            if (isBusy) {
+                renderButton.disabled = prevButton.disabled = nextButton.disabled = deleteButton.disabled = resetButton.disabled = pasteButton.disabled = randomizeButton.disabled = newButton.disabled = copyButton.disabled = true;
+                return;
+            }
+            playButton.disabled = renderButton.disabled =
+                this.config.keyframes.length < 2;
+            if (this.config.isPlayingAnimation) {
+                playButton.disabled = false;
+            }
             prevButton.disabled = this.config.currentKeyframe <= 0;
             nextButton.disabled =
                 this.config.currentKeyframe < 0 ||
@@ -197,28 +220,28 @@ class Gui {
                 step: 1
             })
             .on("change", handle("fps"));
-        renderButton = guiAnimation
-            .addButton({ title: "Render animation...", disabled: true })
+        guiAnimation.addInput(params, "loop", { label: "Loop" });
+        guiAnimation.addInput(params, "firstFrameAsLastFrame", {
+            label: "First frame as last"
+        });
+        playButton = guiAnimation
+            .addButton({ title: "Play animation", disabled: true })
             .on("click", () => {
-                this.trigger("click", "renderAnimation");
+                this.trigger("click", "playAnimation");
                 this.updateAnimationGui();
             });
-    }
-    addEventListener(eventName, eventCallback) {
-        this.listeners[eventName] = this.listeners[eventName] || [];
-        this.listeners[eventName].push(eventCallback);
-    }
-    removeEventListener(eventName, eventCallback) {
-        this.listeners[eventName] = this.listeners[eventName] || [];
-        this.listeners[eventName] = this.listeners[eventName].filter(
-            callback => callback !== eventCallback
-        );
-    }
-    trigger(type, name, value) {
-        this.listeners[type] &&
-            this.listeners[type].forEach(callback =>
-                callback({ type, name, value })
-            );
+        stopButton = guiAnimation
+            .addButton({ title: "Stop", hidden: true })
+            .on("click", () => {
+                this.trigger("click", "stopAnimation");
+                this.updateAnimationGui();
+            });
+        renderButton = guiAnimation
+            .addButton({ title: "Export animation...", disabled: true })
+            .on("click", () => {
+                this.trigger("click", "exportAnimation");
+                this.updateAnimationGui();
+            });
     }
     triggerChange(name, value) {
         this.trigger("change", name, value);

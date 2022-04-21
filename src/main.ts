@@ -2,7 +2,8 @@ import Mandala from "./mandala";
 import Stage from "./stage";
 import Gui from "./gui";
 import Config from "./config";
-import Recorder from "./recorder";
+import Video from "./video";
+import Player from "./player";
 import { on } from "./helpers";
 
 class MandalaApp {
@@ -11,7 +12,7 @@ class MandalaApp {
         this.config = new Config();
         this.gui = new Gui(this.config);
         this.mandala = new Mandala();
-        this.recorder = new Recorder();
+        this.player = new Player();
 
         this.stage = new Stage(canvas);
         this.stage.clear("white");
@@ -150,11 +151,21 @@ class MandalaApp {
                     document.getElementById("filePattern").click();
                     break;
 
-                case "renderAnimation":
+                case "exportAnimation":
+                    this.config.isRecordingAnimation = true;
+                // fall through
+                case "playAnimation":
                     this.config.updateKeyframe();
-                    this.recorder
-                        .record(this.mandala, this.stage, this.config)
-                        .then(() => this.gui.update());
+                    this.config.busy = true;
+                    this.gui.update();
+                    this.player.play(this.mandala, this.stage, this.config);
+                    break;
+                case "stopAnimation":
+                    this.config.isRecordingAnimation = false;
+                    this.config.isPlayingAnimation = false;
+                    this.config.busy = false;
+                    this.gui.update();
+                    this.player.stop();
                     break;
 
                 case "randomize":
@@ -163,6 +174,26 @@ class MandalaApp {
                     this.mandala.setRotation(this.config.patternRotation);
                     this.gui.update();
                     break;
+            }
+        });
+        on(this.player, "started", () => {
+            this.config.isPlayingAnimation = true;
+            if (this.config.isRecordingAnimation) {
+                this.video = new Video({ frameRate: this.config.fps });
+            }
+        });
+        on(this.player, "ended", () => {
+            if (this.config.isRecordingAnimation) {
+                this.video.save();
+            }
+            this.config.isPlayingAnimation = false;
+            this.config.isRecordingAnimation = false;
+            this.config.busy = false;
+            this.gui.update();
+        });
+        on(this.player, "change", () => {
+            if (this.config.isRecordingAnimation) {
+                this.video.addFrame(this.player.ctx.canvas);
             }
         });
     }
