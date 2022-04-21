@@ -81,7 +81,7 @@ export default function Config(params) {
     this.deleteKeyframe = () => {
         if (this.totalKeyframes > 0) {
             this.keyframes.splice(this.currentKeyframe, 1);
-            this.currentKeyframe--;
+            Math.max(0, this.currentKeyframe--);
             this.totalKeyframes = this.keyframes.length;
         }
     };
