@@ -22,7 +22,7 @@ class Player extends Events {
         this.nextKeyframe();
         this.trigger("started", this);
         this.delay = config.isRecordingAnimation ? 1 : 1000 / config.fps;
-        this.loop = config.loop;
+        this.loop = !config.isRecordingAnimation && config.loop;
         this.isPlaying = true;
         this.render();
     }
