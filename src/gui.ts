@@ -1,116 +1,208 @@
-import gui from "dat.gui";
+import { Pane } from "tweakpane";
+import * as EssentialsPlugin from "@tweakpane/plugin-essentials";
 import Easing from "./easing";
 
 class Gui {
     constructor(params) {
         this.listeners = {};
         this.config = params;
-        this.gui = new gui.GUI({ load: JSON });
+        this.gui = new Pane({ load: JSON });
+        this.gui.registerPlugin(EssentialsPlugin);
 
         const handle = name => value => {
             this.triggerChange(name, value);
         };
 
-        const guiCanvas = this.gui.addFolder("Canvas");
+        const guiCanvas = this.gui.addFolder({
+            title: "Canvas",
+            expanded: true
+        });
         guiCanvas
-            .add(params, "width")
-            .min(10)
-            .max(4096)
-            .step(1)
-            .onChange(handle("width"));
+            .addInput(params, "width", {
+                min: 10,
+                max: 4096,
+                step: 1
+            })
+            .on("change", handle("width"));
         guiCanvas
-            .add(params, "height")
-            .min(10)
-            .max(4096)
-            .step(1)
-            .onChange(handle("height"));
+            .addInput(params, "height", {
+                min: 10,
+                max: 4096,
+                step: 1
+            })
+            .on("change", handle("height"));
         guiCanvas
-            .add(params, "scale")
-            .min(1)
-            .max(4)
-            .step(1)
-            .onChange(handle("scale"));
+            .addInput(params, "scale", {
+                min: 1,
+                max: 4,
+                step: 1
+            })
+            .on("change", handle("scale"));
         guiCanvas
-            .add(params, "angle")
-            .min(0)
-            .max(360)
-            .onChange(handle("angle"));
-        guiCanvas.open();
+            .addInput(params, "angle", {
+                min: -360,
+                max: 360
+            })
+            .on("change", handle("angle"));
 
-        const guiPattern = this.gui.addFolder("Pattern");
+        const guiPattern = this.gui.addFolder({
+            title: "Pattern",
+            expanded: true
+        });
         guiPattern
-            .add(params, "symmetries")
-            .min(4)
-            .max(32)
-            .step(1)
-            .onChange(handle("symmetries"));
+            .addInput(params, "symmetries", {
+                min: 4,
+                max: 32,
+                step: 1
+            })
+            .on("change", handle("symmetries"));
         guiPattern
-            .add(params, "patternScale")
-            .name("scale")
-            .min(0.05)
-            .max(4)
-            .step(0.05)
-            .onChange(handle("patternScale"));
+            .addInput(params, "patternScale", {
+                label: "scale",
+                min: 0.05,
+                max: 4,
+                step: 0.05
+            })
+            .on("change", handle("patternScale"));
         guiPattern
-            .add(params, "patternAngle")
-            .name("angle")
-            .min(0)
-            .max(360)
-            .onChange(handle("patternAngle"));
-        guiPattern.addColor(params, "offset").onChange(handle("offset"));
-        guiPattern.add(params, "file").name("Load pattern...");
-        guiPattern.add(params, "save").name("Save image...");
+            .addInput(params, "patternAngle", {
+                label: "angle",
+                min: -360,
+                max: 360,
+                step: 1
+            })
+            .on("change", handle("patternAngle"));
         guiPattern
-            .add(params, "randomize")
-            .name("Randomize")
-            .onChange(() => {
-                this.updateDisplay();
-                this.triggerChange("randomize");
+            .addInput(params, "offset", {
+                x: {
+                    min: -1,
+                    max: +1,
+                    step: 0.01
+                },
+                y: {
+                    min: -1,
+                    max: +1,
+                    step: 0.01
+                }
+            })
+            .on("change", handle("offset"));
+        guiPattern.addButton({ title: "Load pattern..." }).on("click", () => {
+            document.getElementById("patternFile").click();
+        });
+        guiPattern
+            .addButton({ title: "Save Image..." })
+            .on("click", () => this.trigger("click", "saveImage"));
+
+        const guiAnimation = this.gui.addFolder({
+            title: "Animation",
+            expanded: true
+        });
+        guiAnimation
+            .addInput(params, "duration", {
+                label: "Duration",
+                min: 1,
+                max: 600,
+                step: 1
+            })
+            .on("change", handle("totalFrames"));
+        guiAnimation.addInput(params, "pingPong", { label: "Ping pong" });
+        guiAnimation
+            .addInput(params, "easing", {
+                label: "Easing",
+                options: Object.keys(Easing).reduce((result, current) => {
+                    result[current] = current;
+                    return result;
+                }, {})
+            })
+            .on("change", handle("easing"));
+        guiAnimation.addInput(params, "currentKeyframe", {
+            label: "Current Keyframe",
+            disabled: true,
+            step: 1
+        });
+        let newButton,
+            renderButton,
+            nextButton,
+            prevButton,
+            deleteButton,
+            resetButton,
+            copyButton,
+            pasteButton,
+            randomizeButton;
+        this.updateAnimationGui = () => {
+            renderButton.disabled = this.config.keyframes.length < 2;
+            prevButton.disabled = this.config.currentKeyframe <= 0;
+            nextButton.disabled =
+                this.config.currentKeyframe < 0 ||
+                this.config.currentKeyframe >= this.config.totalKeyframes - 1;
+            deleteButton.disabled = this.config.totalKeyframes <= 1;
+            resetButton.disabled = this.config.totalKeyframes <= 1;
+            pasteButton.disabled = !this.config.keyframeClipboard;
+            randomizeButton.disabled = newButton.disabled = copyButton.disabled = !this
+                .config.file;
+        };
+        prevButton = guiAnimation
+            .addButton({ title: "Previous keyframe", disabled: true })
+            .on("click", () => {
+                this.trigger("click", "prevKeyframe");
+                this.updateAnimationGui();
             });
-
-        guiPattern.open();
-
-        const guiAnimation = this.gui.addFolder("Animation");
-        guiAnimation
-            .add(params, "totalFrames")
-            .name("Total frames")
-            .min(1)
-            .max(600)
-            .step(1)
-            .onChange(handle("totalFrames"));
-        guiAnimation
-            .add(params, "fps")
-            .min(1)
-            .max(60)
-            .step(1)
-            .onChange(handle("fps"));
-        guiAnimation.add(params, "pingPong").name("Ping pong");
-        guiAnimation
-            .add(params, "setStartFrame")
-            .name("Set current params as Start Frame");
-        guiAnimation
-            .add(params, "setEndFrame")
-            .name("Set current params as End Frame");
-        guiAnimation.add(params, "easing", Object.keys(Easing)).name("Easing");
-        guiAnimation
-            .add(params, "record")
-            .name("Record...")
-            .onChange(() => {
-                this.updateDisplay();
-                this.trigger("action", "record");
+        nextButton = guiAnimation
+            .addButton({ title: "Next keyframe", disabled: true })
+            .on("click", () => {
+                this.trigger("click", "nextKeyframe");
+                this.updateAnimationGui();
             });
-        guiAnimation.open();
-
-        this.gui.remember(this.config);
-    }
-    updateDisplay(gui) {
-        gui = gui || this.gui;
-        for (var i in gui.__controllers) {
-            gui.__controllers[i].updateDisplay();
-        }
-        for (var f in gui.__folders) {
-            this.updateDisplay(gui.__folders[f]);
-        }
+        guiAnimation.addSeparator();
+        newButton = guiAnimation
+            .addButton({ title: "New keyframe", disabled: true })
+            .on("click", () => {
+                this.trigger("click", "newKeyframe");
+                this.updateAnimationGui();
+            });
+        deleteButton = guiAnimation
+            .addButton({ title: "Delete keyframe", disabled: true })
+            .on("click", () => {
+                this.trigger("click", "deleteKeyframe");
+                this.updateAnimationGui();
+            });
+        resetButton = guiAnimation
+            .addButton({ title: "Clear keyframes", disabled: true })
+            .on("click", () => {
+                this.trigger("click", "resetKeyframes");
+                this.updateAnimationGui();
+            });
+        guiAnimation.addSeparator();
+        copyButton = guiAnimation
+            .addButton({ title: "Copy keyframe", disabled: true })
+            .on("click", () => {
+                this.trigger("click", "copyKeyframe");
+                this.updateAnimationGui();
+            });
+        pasteButton = guiAnimation
+            .addButton({ title: "Paste keyframe", disabled: true })
+            .on("click", () => {
+                this.trigger("click", "pasteKeyframe");
+                this.updateAnimationGui();
+            });
+        randomizeButton = guiAnimation
+            .addButton({ title: "Randomize", disabled: true })
+            .on("click", () => this.trigger("click", "randomize"));
+        guiAnimation.addSeparator();
+        guiAnimation
+            .addInput(params, "fps", {
+                label: "FPS",
+                min: 1,
+                max: 60,
+                step: 1
+            })
+            .on("change", handle("fps"));
+        renderButton = guiAnimation
+            .addButton({ title: "Render animation...", disabled: true })
+            .on("click", () => {
+                this.trigger("click", "renderAnimation");
+                this.updateAnimationGui();
+            });
     }
     addEventListener(eventName, eventCallback) {
         this.listeners[eventName] = this.listeners[eventName] || [];
@@ -135,32 +227,17 @@ class Gui {
         return this.config[name];
     }
     setValue(name, value) {
-        const controller = this._findControllerFor(name);
-        if (controller) {
-            controller.setValue(value);
+        this.config[name] = value;
+        this.update();
+    }
+    update() {
+        this.gui.refresh();
+        if (this.updateAnimationGui) {
+            this.updateAnimationGui();
         }
     }
     increaseValue(name, value) {
         this.setValue(name, this.getValue(name) + value);
-    }
-    _findControllerFor(name) {
-        let controller = this.gui.__controllers.find(function(elem) {
-            return elem.property === name;
-        });
-        if (!controller) {
-            controller = Object.keys(this.gui.__folders).reduce(
-                (result, folderName) => {
-                    if (!result) {
-                        result = this.gui.__folders[
-                            folderName
-                        ].__controllers.find(elem => elem.property === name);
-                    }
-                    return result;
-                },
-                undefined
-            );
-        }
-        return controller;
     }
 }
 

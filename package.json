@@ -27,10 +27,12 @@
     },
     "homepage": "https://github.com/ArtBIT/html5-mandala#readme",
     "dependencies": {
-        "dat.gui": "^0.7.7",
+        "@tweakpane/plugin-essentials": "^0.1.4",
+        "tweakpane": "^3.0.8",
         "webm-writer": "^1.0.0"
     },
     "devDependencies": {
+        "@tweakpane/core": "^1.0.9",
         "esbuild": "^0.5.26",
         "gh-pages": "^3.1.0",
         "typescript": "^3.9.6"

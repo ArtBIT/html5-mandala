@@ -43,8 +43,8 @@ class MandalaApp {
             } else {
                 const offset = this.gui.getValue("offset");
                 this.gui.setValue("offset", {
-                    s: offset.s - e.movementY / this.stage.height,
-                    v: offset.v - e.movementX / this.stage.width
+                    y: offset.y - e.movementY / this.stage.height,
+                    x: offset.x - e.movementX / this.stage.width
                 });
             }
         });
@@ -69,8 +69,8 @@ class MandalaApp {
             lastPosition.y = touch.clientY;
             const offset = this.gui.getValue("offset");
             this.gui.setValue("offset", {
-                s: offset.s - movementY / this.stage.height,
-                v: offset.v - movementX / this.stage.width
+                y: offset.y - movementY / this.stage.height,
+                x: offset.x - movementX / this.stage.width
             });
         });
         on(this.stage.canvas, "wheel", e => {
@@ -83,7 +83,7 @@ class MandalaApp {
             const file = e.dataTransfer.files[0];
             this.onFileChange(file);
         });
-        on(this.gui, "change", ({ name, value }) => {
+        on(this.gui, "change", ({ name, value: { value } }) => {
             switch (name) {
                 case "patternAngle":
                     this.mandala.setRotation(value);
@@ -100,19 +100,68 @@ class MandalaApp {
                 case "height":
                     this.stage.setHeight(value);
                     break;
-                case "randomize":
-                    this.mandala.setScale(this.config.patternScale);
-                    this.mandala.setRotation(this.config.patternRotation);
-                    break;
             }
             this.render();
         });
-        on(this.gui, "action", ({ name, value }) => {
+        on(this.gui, "click", ({ name }) => {
             switch (name) {
-                case "record":
+                case "saveImage":
+                    const a = document.createElement("a");
+                    a.download = "mandala.png";
+                    a.href = document
+                        .getElementById("stage")
+                        .toDataURL("image/png")
+                        .replace(
+                            /^data:image\/[^;]/,
+                            "data:application/octet-stream"
+                        );
+                    a.click();
+                    break;
+
+                case "pasteKeyframe":
+                    this.config.pasteKeyframe();
+                    this.gui.update();
+                    break;
+                case "copyKeyframe":
+                    this.config.copyKeyframe();
+                    this.gui.update();
+                    break;
+                case "deleteKeyframe":
+                    this.config.deleteKeyframe();
+                    this.gui.update();
+                    break;
+                case "resetKeyframes":
+                    this.config.resetKeyframes();
+                    this.gui.update();
+                    break;
+                case "newKeyframe":
+                    this.config.addKeyframe();
+                    this.gui.update();
+                    break;
+                case "nextKeyframe":
+                    this.config.nextKeyframe();
+                    this.gui.update();
+                    break;
+                case "prevKeyframe":
+                    this.config.prevKeyframe();
+                    this.gui.update();
+                    break;
+                case "loadFile":
+                    document.getElementById("filePattern").click();
+                    break;
+
+                case "renderAnimation":
+                    this.config.updateKeyframe();
                     this.recorder
                         .record(this.mandala, this.stage, this.config)
-                        .then(() => this.gui.updateDisplay());
+                        .then(() => this.gui.update());
+                    break;
+
+                case "randomize":
+                    this.config.randomize();
+                    this.mandala.setScale(this.config.patternScale);
+                    this.mandala.setRotation(this.config.patternRotation);
+                    this.gui.update();
                     break;
             }
         });
@@ -127,6 +176,8 @@ class MandalaApp {
             this.mandala.setPattern(
                 this.stage.ctx.createPattern(img, "repeat")
             );
+            this.config.file = file;
+            this.gui.update();
             this.render();
         });
     }

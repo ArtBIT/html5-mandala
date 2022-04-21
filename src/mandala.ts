@@ -53,8 +53,8 @@ class Mandala {
                 halfdiag,
                 1, //params.patternScale,
                 angleIncrease,
-                params.offset.s * width,
-                params.offset.v * height
+                params.offset.x * width,
+                params.offset.y * height
             );
             ctx.scale(1, -1);
             this.drawSlice(
@@ -62,8 +62,8 @@ class Mandala {
                 halfdiag,
                 1, //params.patternScale,
                 angleIncrease,
-                params.offset.s * width,
-                params.offset.v * height
+                params.offset.x * width,
+                params.offset.y * height
             );
             ctx.scale(1, -1);
         }
