@@ -43,6 +43,8 @@ class Mandala {
         const halfdiag = diagonal / 2;
 
         ctx.save();
+        ctx.fillStyle = params.backgroundColor;
+        ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
         let angleIncrease = Math.PI / params.symmetries;
         ctx.translate(halfwidth, halfheight);
         ctx.rotate((params.angle / 180) * Math.PI);

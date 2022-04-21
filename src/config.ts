@@ -8,6 +8,7 @@ export default function Config(params) {
     this.patternScale = params.patternScale || 1;
     this.patternAngle = params.patternAngle || 0;
     this.symmetries = params.symmetries || 7;
+    this.backgroundColor = "#000";
 
     this.isPlayingAnimation = false;
     this.isRecordingAnimation = false;

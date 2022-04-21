@@ -71,12 +71,6 @@ class Player extends Events {
             const to = this.keyframes[this.currentKeyframe + 1];
             let t = this.currentFrame / from.duration;
             const params = this.interpolate(from, to, t);
-            this.ctx.clearRect(
-                0,
-                0,
-                this.ctx.canvas.width,
-                this.ctx.canvas.height
-            );
             this.mandala.setScale(params.patternScale);
             this.mandala.setRotation(params.patternAngle);
             this.mandala.render(this.ctx, params);

@@ -20,6 +20,11 @@ class Gui extends Events {
             expanded: true
         });
         guiCanvas
+            .addInput(params, "backgroundColor", {
+                label: "Background color"
+            })
+            .on("change", handle("backgroundColor"));
+        guiCanvas
             .addInput(params, "width", {
                 min: 10,
                 max: 4096,
