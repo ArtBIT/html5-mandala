@@ -4,14 +4,7 @@ import Events from "./events";
 class Player extends Events {
     play(mandala, stage, config) {
         this.mandala = mandala;
-        if (config.isRecordingAnimation && window.OffscreenCanvas) {
-            this.ctx = new OffscreenCanvas(
-                stage.width,
-                stage.height
-            ).getContext("2d");
-        } else {
-            this.ctx = stage.ctx;
-        }
+        this.ctx = stage.ctx;
         this.keyframes = [...config.keyframes];
         if (config.firstFrameAsLastFrame) {
             this.keyframes.push(this.keyframes[0]);
