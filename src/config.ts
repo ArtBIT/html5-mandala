@@ -5,7 +5,60 @@ const randomizeValue = (value, min, max, strength) => {
 
 class Config {
     constructor(params) {
+        // presets
+        this.currentPreset = "";
+        this.file = undefined;
+
         this.import(params);
+    }
+    import(params) {
+        params = params || {};
+        // canvas
+        this.width = params.width || 2048;
+        this.height = params.height || 2048;
+        this.scale = params.scale || 4;
+        this.angle = params.angle || 0;
+        this.backgroundColor = "#000";
+
+        // pattern
+        this.offset = params.offset || { x: 0, y: 0 };
+        this.patternScale = params.patternScale || 1;
+        this.patternAngle = params.patternAngle || 0;
+        this.symmetries = params.symmetries || 7;
+
+        this.randomizeStrength = 1;
+
+        // animation
+        this.isPlayingAnimation = false;
+        this.isRecordingAnimation = false;
+        this.isBusy = false;
+        this.loop = params.loop || false;
+        this.firstFrameAsLastFrame = params.firstFrameAsLastFrame || false;
+        this.keyframeClipboard = undefined;
+        this.fps = params.fps || 30;
+        this.editAllKeyframes = false;
+        this.duration = this.fps;
+        this.keyframes = params.keyframes || [];
+        this.totalKeyframes = this.keyframes.length;
+        this.currentKeyframe = 0;
+        this.easing = "linear";
+
+        this.fromKeyframe();
+    }
+    export() {
+        this.updateKeyframe();
+        return {
+            width: this.width,
+            height: this.height,
+            scale: this.scale,
+            angle: this.angle,
+            backgroundColor: this.backgroundColor,
+            randomizeStrength: this.randomizeStrength,
+            loop: this.loop,
+            firstFrameAsLastFrame: this.firstFrameAsLastFrame,
+            keyframes: [...this.keyframes],
+            fps: this.fps
+        };
     }
     toKeyframe() {
         return {
@@ -40,6 +93,9 @@ class Config {
         this.duration = keyframe.duration;
     }
     updateKeyframe(newKeyframeParams) {
+        if (this.keyframes.length === 0) {
+            this.keyframes.push(this.toKeyframe());
+        }
         this.keyframes[this.currentKeyframe] =
             newKeyframeParams || this.toKeyframe();
     }
@@ -117,53 +173,6 @@ class Config {
         this.symmetries = Math.floor(
             randomizeValue(this.symmetries, 4, 16, this.randomizeStrength)
         );
-    }
-    export() {
-        return {
-            width: this.width,
-            height: this.height,
-            scale: this.scale,
-            angle: this.angle,
-            backgroundColor: this.backgroundColor,
-            randomizeStrength: this.randomizeStrength,
-            loop: this.loop,
-            firstFrameAsLastFrame: this.firstFrameAsLastFrame,
-            keyframes: [...this.keyframes],
-            fps: this.fps
-        };
-    }
-    import(params) {
-        params = params || {};
-        this.width = params.width || 2048;
-        this.height = params.height || 2048;
-        this.scale = params.scale || 4;
-        this.angle = params.angle || 0;
-        this.offset = params.offset || { x: 0, y: 0 };
-        this.patternScale = params.patternScale || 1;
-        this.patternAngle = params.patternAngle || 0;
-        this.symmetries = params.symmetries || 7;
-        this.backgroundColor = "#000";
-
-        this.randomizeStrength = 1;
-        this.file = undefined;
-
-        // animation
-        this.isPlayingAnimation = false;
-        this.isRecordingAnimation = false;
-        this.isBusy = false;
-        this.loop = false;
-        this.firstFrameAsLastFrame = false;
-
-        this.keyframes = params.keyframes || [];
-        this.keyframeClipboard = undefined;
-        this.fps = params.fps || 30;
-        this.editAllKeyframes = false;
-        this.duration = this.fps;
-        this.totalKeyframes = 0;
-        this.currentKeyframe = 0;
-        this.easing = "linear";
-
-        this.fromKeyframe();
     }
 }
 
