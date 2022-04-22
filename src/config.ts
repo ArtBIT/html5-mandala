@@ -16,13 +16,48 @@ export default function Config(params) {
     this.loop = false;
     this.firstFrameAsLastFrame = false;
 
+    this.randomizeStrength = 1;
+    const randomizeValue = (value, min, max, strength) => {
+        const newValue = Math.random() * (max - min) + min;
+        return Math.min(
+            max,
+            Math.max(min, value + (newValue - value) * strength)
+        );
+    };
     this.randomize = () => {
-        this.angle = Math.floor(Math.random() * 360);
-        this.offset.x = Math.random();
-        this.offset.y = Math.random();
-        this.patternScale = Math.random() * 4;
-        this.patternAngle = Math.floor(Math.random() * 360);
-        this.symmetries = Math.floor(Math.random() * 16) + 4;
+        this.angle = randomizeValue(
+            this.angle,
+            -180,
+            180,
+            this.randomizeStrength
+        );
+        this.offset.x = randomizeValue(
+            this.offset.x,
+            -1,
+            1,
+            this.randomizeStrength
+        );
+        this.offset.y = randomizeValue(
+            this.offset.y,
+            -1,
+            1,
+            this.randomizeStrength
+        );
+        this.patternScale = randomizeValue(
+            this.patternScale,
+            0.1,
+            4,
+            this.randomizeStrength
+        );
+        this.patternAngle = randomizeValue(
+            this.patternAngle,
+            -180,
+            180,
+            this.randomizeStrength
+        );
+        this.symmetries = Math.floor(
+            randomizeValue(this.symmetries, 4, 16, this.randomizeStrength)
+        );
     };
     this.file = undefined;
     // animation
@@ -92,6 +127,7 @@ export default function Config(params) {
             this.keyframes.splice(this.currentKeyframe, 1);
             Math.max(0, this.currentKeyframe--);
             this.totalKeyframes = this.keyframes.length;
+            this.fromKeyframe();
         }
     };
     this.resetKeyframes = () => {

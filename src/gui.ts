@@ -105,6 +105,11 @@ class Gui extends Events {
             expanded: true
         });
         guiAnimation
+            .addInput(params, "editAllKeyframes", {
+                label: "Edit All Keyframes"
+            })
+            .on("change", handle("editAllKeyframes"));
+        guiAnimation
             .addInput(params, "duration", {
                 label: "Duration",
                 min: 1,
@@ -212,6 +217,12 @@ class Gui extends Events {
                 this.trigger("click", "pasteKeyframe");
                 this.updateAnimationGui();
             });
+        guiAnimation.addInput(params, "randomizeStrength", {
+            label: "Randomization Strength",
+            min: 0,
+            max: 1,
+            step: 0.01
+        });
         randomizeButton = guiAnimation
             .addButton({ title: "Randomize", disabled: true })
             .on("click", () => this.trigger("click", "randomize"));
@@ -225,11 +236,6 @@ class Gui extends Events {
             })
             .on("change", handle("fps"));
         guiAnimation.addInput(params, "loop", { label: "Loop" });
-        guiAnimation
-            .addInput(params, "editAllKeyframes", {
-                label: "Edit All Keyframes"
-            })
-            .on("change", handle("editAllKeyframes"));
         guiAnimation.addInput(params, "firstFrameAsLastFrame", {
             label: "First frame as last"
         });
