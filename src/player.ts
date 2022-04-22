@@ -4,7 +4,7 @@ import Events from "./events";
 class Player extends Events {
     play(mandala, stage, config) {
         this.mandala = mandala;
-        if (window.OffscreenCanvas) {
+        if (config.isRecordingAnimation && window.OffscreenCanvas) {
             this.ctx = new OffscreenCanvas(
                 stage.width,
                 stage.height
