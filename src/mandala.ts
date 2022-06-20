@@ -45,43 +45,42 @@ class Mandala {
     ctx.save();
     ctx.fillStyle = params.backgroundColor;
     ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
-    if (params.symmetries == 1) {
+    if (params.symmetries == 0) {
       ctx.save();
       let xOffset = params.offset.x * width;
       let yOffset = params.offset.y * height;
 
       ctx.translate(halfwidth, halfheight);
       ctx.rotate((params.angle / 180) * Math.PI);
-      ctx.translate(-halfdiag, -halfdiag);
-      ctx.translate(xOffset, yOffset);
       ctx.fillStyle = this.pattern;
-      ctx.fillRect(-xOffset, -yOffset, diagonal, diagonal);
-      //ctx.fillRect(-halfdiag, -halfdiag, diagonal, diagonal);
-      ctx.restore();
-    } else if (params.symmetries == 2) {
-      ctx.save();
-      let xOffset = params.offset.x * width;
-      let yOffset = params.offset.y * height;
 
-      ctx.translate(halfwidth, halfheight);
-      ctx.rotate((params.angle / 180) * Math.PI);
-      ctx.translate(xOffset, yOffset);
-      ctx.fillStyle = this.pattern;
-      ctx.fillRect(
-        -xOffset - halfdiag,
-        -yOffset - halfdiag,
-        diagonal,
-        halfdiag
-      );
-      ctx.translate(-xOffset, -yOffset);
       ctx.scale(1, -1);
       ctx.translate(xOffset, yOffset);
       ctx.fillRect(
-        -xOffset - halfdiag,
-        -yOffset - halfdiag,
+        -halfdiag - xOffset,
+        -halfdiag - yOffset,
         diagonal,
-        halfdiag
+        diagonal
       );
+      ctx.restore();
+    } else if (params.symmetries == 1) {
+      ctx.save();
+      let xOffset = params.offset.x * width;
+      let yOffset = params.offset.y * height;
+
+      ctx.translate(halfwidth, halfheight);
+      ctx.rotate((params.angle / 180) * Math.PI);
+      ctx.fillStyle = this.pattern;
+
+      ctx.scale(1, -1);
+      ctx.translate(xOffset, yOffset);
+      ctx.fillRect(-halfdiag - xOffset, -yOffset, diagonal, halfdiag);
+      ctx.translate(-xOffset, -yOffset);
+
+      ctx.scale(1, -1);
+      ctx.translate(xOffset, yOffset);
+      ctx.fillRect(-halfdiag - xOffset, -yOffset, diagonal, halfdiag);
+
       ctx.restore();
     } else {
       ctx.save();

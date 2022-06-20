@@ -138,7 +138,7 @@ class Gui extends Events {
     });
     folder
       .addInput(params, "symmetries", {
-        min: 1,
+        min: 0,
         max: 32,
         step: 1
       })

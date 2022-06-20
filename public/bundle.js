@@ -11063,30 +11063,31 @@
       ctx.save();
       ctx.fillStyle = params.backgroundColor;
       ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
-      if (params.symmetries == 1) {
+      if (params.symmetries == 0) {
         ctx.save();
         let xOffset = params.offset.x * width;
         let yOffset = params.offset.y * height;
         ctx.translate(halfwidth, halfheight);
         ctx.rotate(params.angle / 180 * Math.PI);
-        ctx.translate(-halfdiag, -halfdiag);
-        ctx.translate(xOffset, yOffset);
         ctx.fillStyle = this.pattern;
-        ctx.fillRect(-xOffset, -yOffset, diagonal, diagonal);
+        ctx.scale(1, -1);
+        ctx.translate(xOffset, yOffset);
+        ctx.fillRect(-halfdiag - xOffset, -halfdiag - yOffset, diagonal, diagonal);
         ctx.restore();
-      } else if (params.symmetries == 2) {
+      } else if (params.symmetries == 1) {
         ctx.save();
         let xOffset = params.offset.x * width;
         let yOffset = params.offset.y * height;
         ctx.translate(halfwidth, halfheight);
         ctx.rotate(params.angle / 180 * Math.PI);
-        ctx.translate(xOffset, yOffset);
         ctx.fillStyle = this.pattern;
-        ctx.fillRect(-xOffset - halfdiag, -yOffset - halfdiag, diagonal, halfdiag);
+        ctx.scale(1, -1);
+        ctx.translate(xOffset, yOffset);
+        ctx.fillRect(-halfdiag - xOffset, -yOffset, diagonal, halfdiag);
         ctx.translate(-xOffset, -yOffset);
         ctx.scale(1, -1);
         ctx.translate(xOffset, yOffset);
-        ctx.fillRect(-xOffset - halfdiag, -yOffset - halfdiag, diagonal, halfdiag);
+        ctx.fillRect(-halfdiag - xOffset, -yOffset, diagonal, halfdiag);
         ctx.restore();
       } else {
         ctx.save();
@@ -11354,7 +11355,7 @@
         expanded: true
       });
       folder.addInput(params, "symmetries", {
-        min: 1,
+        min: 0,
         max: 32,
         step: 1
       }).on("change", this.handle("symmetries"));
