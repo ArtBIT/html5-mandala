@@ -50,7 +50,8 @@
             gtag('js', new Date());
             gtag('config', 'UA-170132767-1');
         </script>
-        <script src="./bundle.js?6"></script>
+
+        <!-- <script src="./bundle.js?6"></script> -->
     </head>
     <body>
         <script>
@@ -67,7 +68,12 @@
         </a>
         <input id="patternFile" type="file" style="visibility:hidden" />
         <script charset="utf-8">
+        var script = document.createElement('script');
+        script.src = `./bundle.js?${+ new Date()}`;
+        script.onload = function() {
            new MandalaApp('#stage'); 
+           };
+        document.head.appendChild(script);
         </script>
     </body>
 </html>
