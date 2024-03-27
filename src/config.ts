@@ -25,6 +25,7 @@ class Config {
     this.patternScale = params.patternScale || 1;
     this.patternAngle = params.patternAngle || 0;
     this.symmetries = params.symmetries || 7;
+    this.makeTilable = params.makeTilable || false;
 
     this.randomizeStrength = 1;
 
@@ -57,7 +58,7 @@ class Config {
       loop: this.loop,
       firstFrameAsLastFrame: this.firstFrameAsLastFrame,
       keyframes: [...this.keyframes],
-      fps: this.fps
+      fps: this.fps,
     };
   }
   toKeyframe() {
@@ -65,13 +66,13 @@ class Config {
       angle: this.angle,
       offset: {
         x: this.offset.x,
-        y: this.offset.y
+        y: this.offset.y,
       },
       patternScale: this.patternScale,
       patternAngle: this.patternAngle,
       symmetries: this.symmetries,
       easing: this.easing,
-      duration: this.duration
+      duration: this.duration,
     };
   }
   fromKeyframe(keyframeIndex) {
@@ -84,7 +85,7 @@ class Config {
     this.angle = keyframe.angle;
     this.offset = {
       x: keyframe.offset.x,
-      y: keyframe.offset.y
+      y: keyframe.offset.y,
     };
     this.patternScale = keyframe.patternScale;
     this.patternAngle = keyframe.patternAngle;

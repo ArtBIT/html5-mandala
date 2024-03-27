@@ -24,23 +24,23 @@ class Gui extends Events {
   initPresets(params) {
     const folder = this.gui.addFolder({
       title: "Presets",
-      expanded: true
+      expanded: true,
     });
     let presetsList;
 
     const initPrestList = () => {
       const options = [
         { text: "", value: "" },
-        ...Object.keys(this.presets.get() || {}).map(key => ({
+        ...Object.keys(this.presets.get() || {}).map((key) => ({
           text: key,
-          value: key
-        }))
+          value: key,
+        })),
       ];
       return folder
         .addInput(params, "currentPreset", {
           index: 0,
           label: "Current",
-          options
+          options,
         })
         .on("change", ({ name, value: { value } }) => {
           this.config.import(this.presets.get(this.config.currentPreset));
@@ -89,44 +89,44 @@ class Gui extends Events {
   initCanvas(params) {
     const folder = this.gui.addFolder({
       title: "Canvas",
-      expanded: true
+      expanded: true,
     });
     folder
       .addInput(params, "backgroundColor", {
-        label: "Background color"
+        label: "Background color",
       })
       .on("change", this.handle("backgroundColor"));
     folder
       .addInput(params, "width", {
         min: 10,
         max: 4096,
-        step: 1
+        step: 1,
       })
       .on("change", this.handle("width"));
     folder
       .addInput(params, "height", {
         min: 10,
         max: 4096,
-        step: 1
+        step: 1,
       })
       .on("change", this.handle("height"));
     folder
       .addInput(params, "scale", {
         min: 1,
         max: 4,
-        step: 1
+        step: 1,
       })
       .on("change", this.handle("scale"));
     folder
       .addInput(params, "angle", {
         min: -360,
-        max: 360
+        max: 360,
       })
       .on("change", this.handle("angle"));
   }
 
   handle(name) {
-    return value => {
+    return (value) => {
       this.triggerChange(name, value);
     };
   }
@@ -134,13 +134,13 @@ class Gui extends Events {
   initPattern(params) {
     const folder = this.gui.addFolder({
       title: "Pattern",
-      expanded: true
+      expanded: true,
     });
     folder
       .addInput(params, "symmetries", {
         min: 0,
         max: 32,
-        step: 1
+        step: 1,
       })
       .on("change", this.handle("symmetries"));
     folder
@@ -148,7 +148,7 @@ class Gui extends Events {
         label: "scale",
         min: 0.05,
         max: 4,
-        step: 0.05
+        step: 0.05,
       })
       .on("change", this.handle("patternScale"));
     folder
@@ -156,7 +156,7 @@ class Gui extends Events {
         label: "angle",
         min: -360,
         max: 360,
-        step: 1
+        step: 1,
       })
       .on("change", this.handle("patternAngle"));
     folder
@@ -164,15 +164,18 @@ class Gui extends Events {
         x: {
           min: -1,
           max: +1,
-          step: 0.01
+          step: 0.01,
         },
         y: {
           min: -1,
           max: +1,
-          step: 0.01
-        }
+          step: 0.01,
+        },
       })
       .on("change", this.handle("offset"));
+    folder
+      .addInput(params, "makeTilable", { label: "Make Tilable" })
+      .on("change", this.handle("makeTilable"));
     folder.addButton({ title: "Load pattern..." }).on("click", () => {
       document.getElementById("patternFile").click();
     });
@@ -183,11 +186,11 @@ class Gui extends Events {
   initAnimation(params) {
     const folder = this.gui.addFolder({
       title: "Animation",
-      expanded: true
+      expanded: true,
     });
     folder
       .addInput(params, "editAllKeyframes", {
-        label: "Edit All Keyframes"
+        label: "Edit All Keyframes",
       })
       .on("change", this.handle("editAllKeyframes"));
     folder
@@ -195,7 +198,7 @@ class Gui extends Events {
         label: "Duration",
         min: 1,
         max: 600,
-        step: 1
+        step: 1,
       })
       .on("change", this.handle("duration"));
     folder
@@ -204,13 +207,13 @@ class Gui extends Events {
         options: Object.keys(Easing).reduce((result, current) => {
           result[current] = current;
           return result;
-        }, {})
+        }, {}),
       })
       .on("change", this.handle("easing"));
     folder.addInput(params, "currentKeyframe", {
       label: "Current Keyframe",
       disabled: true,
-      step: 1
+      step: 1,
     });
     let newButton,
       playButton,
@@ -236,7 +239,16 @@ class Gui extends Events {
         this.config.isRecordingAnimation ||
         this.config.isBusy;
       if (isBusy) {
-        renderButton.disabled = prevButton.disabled = nextButton.disabled = deleteButton.disabled = resetButton.disabled = pasteButton.disabled = randomizeButton.disabled = newButton.disabled = copyButton.disabled = true;
+        renderButton.disabled =
+          prevButton.disabled =
+          nextButton.disabled =
+          deleteButton.disabled =
+          resetButton.disabled =
+          pasteButton.disabled =
+          randomizeButton.disabled =
+          newButton.disabled =
+          copyButton.disabled =
+            true;
         return;
       }
       playButton.disabled = renderButton.disabled =
@@ -251,8 +263,10 @@ class Gui extends Events {
       deleteButton.disabled = this.config.totalKeyframes <= 1;
       resetButton.disabled = this.config.totalKeyframes <= 1;
       pasteButton.disabled = !this.config.keyframeClipboard;
-      randomizeButton.disabled = newButton.disabled = copyButton.disabled = !this
-        .config.file;
+      randomizeButton.disabled =
+        newButton.disabled =
+        copyButton.disabled =
+          !this.config.file;
     };
     prevButton = folder
       .addButton({ title: "Previous keyframe", disabled: true })
@@ -302,7 +316,7 @@ class Gui extends Events {
       label: "Randomization Strength",
       min: 0,
       max: 1,
-      step: 0.01
+      step: 0.01,
     });
     randomizeButton = folder
       .addButton({ title: "Randomize", disabled: true })
@@ -313,12 +327,12 @@ class Gui extends Events {
         label: "FPS",
         min: 1,
         max: 60,
-        step: 1
+        step: 1,
       })
       .on("change", this.handle("fps"));
     folder.addInput(params, "loop", { label: "Loop" });
     folder.addInput(params, "firstFrameAsLastFrame", {
-      label: "First frame as last"
+      label: "First frame as last",
     });
     playButton = folder
       .addButton({ title: "Play animation", disabled: true })

@@ -22,18 +22,18 @@ class MandalaApp {
   }
   bindEvents() {
     let isDragging = false;
-    on(document.getElementById("patternFile"), "change", e => {
+    on(document.getElementById("patternFile"), "change", (e) => {
       this.onFileChange(e.target.files[0]);
     });
-    on(this.stage.canvas, "mousedown", e => {
+    on(this.stage.canvas, "mousedown", (e) => {
       if (e.button === 0) {
         isDragging = true;
       }
     });
-    on(document, "mouseup", e => {
+    on(document, "mouseup", (e) => {
       isDragging = false;
     });
-    on(document, "mousemove", e => {
+    on(document, "mousemove", (e) => {
       if (!isDragging) {
         return;
       }
@@ -45,11 +45,11 @@ class MandalaApp {
         const offset = this.gui.getValue("offset");
         this.gui.setValue("offset", {
           y: offset.y - e.movementY / this.stage.height,
-          x: offset.x - e.movementX / this.stage.width
+          x: offset.x - e.movementX / this.stage.width,
         });
       }
     });
-    on(window, "paste", e => {
+    on(window, "paste", (e) => {
       if (!e?.clipboardData?.items?.length) {
         return;
       }
@@ -57,7 +57,7 @@ class MandalaApp {
       const canvas = document.querySelector("canvas");
       const ctx = canvas.getContext("2d");
 
-      [...e.clipboardData.items].forEach(item => {
+      [...e.clipboardData.items].forEach((item) => {
         if (item.type.indexOf("image") !== -1) {
           e.preventDefault();
           e.stopPropagation();
@@ -67,16 +67,16 @@ class MandalaApp {
       });
     });
     const lastPosition = { x: undefined, y: undefined };
-    on(this.stage.canvas, "touchstart", e => {
+    on(this.stage.canvas, "touchstart", (e) => {
       isDragging = true;
       const touch = event.changedTouches[0];
       lastPosition.x = touch.clientX;
       lastPosition.y = touch.clientY;
     });
-    on(document, "touchend touchcancel", e => {
+    on(document, "touchend touchcancel", (e) => {
       isDragging = false;
     });
-    on(document, "touchmove", e => {
+    on(document, "touchmove", (e) => {
       if (!isDragging) {
         return;
       }
@@ -88,26 +88,29 @@ class MandalaApp {
       const offset = this.gui.getValue("offset");
       this.gui.setValue("offset", {
         y: offset.y - movementY / this.stage.height,
-        x: offset.x - movementX / this.stage.width
+        x: offset.x - movementX / this.stage.width,
       });
     });
-    on(this.stage.canvas, "wheel", e => {
+    on(this.stage.canvas, "wheel", (e) => {
       e.preventDefault();
       this.gui.increaseValue("patternScale", e.deltaY * -0.001);
     });
-    on(window, "dragover", e => e.preventDefault());
-    on(window, "drop", e => {
+    on(window, "dragover", (e) => e.preventDefault());
+    on(window, "drop", (e) => {
       e.preventDefault();
       const file = e.dataTransfer.files[0];
       this.onFileChange(file);
     });
     const editInAllKeyframes = (name, value) => {
       if (this.config.editAllKeyframes) {
-        this.config.keyframes.forEach(kf => (kf[name] = value));
+        this.config.keyframes.forEach((kf) => (kf[name] = value));
       }
     };
     on(this.gui, "change", ({ name, value: { value } }) => {
       switch (name) {
+        case "makeTilable":
+          this.onFileChange(this.config.file);
+          break;
         case "patternAngle":
           this.mandala.setRotation(value);
           editInAllKeyframes(name, value);
@@ -237,9 +240,32 @@ class MandalaApp {
     if (!file) {
       return;
     }
-    const img = new Image();
+    let img = new Image();
     img.src = URL.createObjectURL(file);
     img.addEventListener("load", () => {
+      if (this.config.makeTilable) {
+        // make temporary canvas
+        const canvas = document.createElement("canvas");
+        const ctx = canvas.getContext("2d");
+        canvas.width = img.width * 2;
+        canvas.height = img.height * 2;
+        // draw image on the top left
+        ctx.drawImage(img, 0, 0);
+        // mirror image on the right
+        ctx.save();
+        ctx.translate(img.width, 0);
+        ctx.scale(-1, 1);
+        ctx.drawImage(img, -img.width, 0);
+        ctx.restore();
+        // mirror image on the bottom
+        ctx.save();
+        ctx.translate(0, img.height);
+        ctx.scale(1, -1);
+        ctx.drawImage(ctx.canvas, 0, -img.height);
+        ctx.restore();
+        img = ctx.canvas;
+      }
+
       this.mandala.setPattern(this.stage.ctx.createPattern(img, "repeat"));
       this.config.file = file;
       this.gui.update();

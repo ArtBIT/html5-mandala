@@ -1,40 +1,34 @@
 {
-    "name": "html5-mandala",
-    "version": "0.1.0",
-    "description": "Radial symmetry image effect using HTML5 canvas",
-    "main": "src/index.js",
-    "scripts": {
-        "deploy": "npm run build && gh-pages -d public",
-        "check": "tsc --noEmit -c tsconfig.json",
-        "dev": "esbuild --bundle src/main.ts --outfile=public/bundle.js --sourcemap",
-        "build": "esbuild --bundle src/main.ts --outfile=public/bundle.js --minify"
-    },
-    "repository": {
-        "type": "git",
-        "url": "git+https://github.com/ArtBIT/html5-mandala.git"
-    },
-    "keywords": [
-        "html5",
-        "canvas",
-        "symmetry",
-        "radial-symmetry",
-        "javascript"
-    ],
-    "author": "Djordje Ungar",
-    "license": "MIT",
-    "bugs": {
-        "url": "https://github.com/ArtBIT/html5-mandala/issues"
-    },
-    "homepage": "https://github.com/ArtBIT/html5-mandala#readme",
-    "dependencies": {
-        "@tweakpane/plugin-essentials": "^0.1.4",
-        "tweakpane": "^3.0.8",
-        "webm-writer": "^1.0.0"
-    },
-    "devDependencies": {
-        "@tweakpane/core": "^1.0.9",
-        "esbuild": "^0.5.26",
-        "gh-pages": "^3.1.0",
-        "typescript": "^3.9.6"
-    }
+  "name": "html5-mandala",
+  "version": "0.7.0",
+  "description": "Radial symmetry image effect using HTML5 canvas",
+  "main": "src/index.js",
+  "scripts": {
+    "deploy": "npm run build && gh-pages -d public",
+    "check": "tsc --noEmit -c tsconfig.json",
+    "dev": "esbuild --bundle src/main.ts --outfile=public/bundle.js --sourcemap",
+    "build": "esbuild --bundle src/main.ts --outfile=public/bundle.js --minify"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ArtBIT/html5-mandala.git"
+  },
+  "keywords": ["html5", "canvas", "symmetry", "radial-symmetry", "javascript"],
+  "author": "Djordje Ungar",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ArtBIT/html5-mandala/issues"
+  },
+  "homepage": "https://github.com/ArtBIT/html5-mandala#readme",
+  "dependencies": {
+    "@tweakpane/plugin-essentials": "^0.1.4",
+    "tweakpane": "^3.0.8",
+    "webm-writer": "^1.0.0"
+  },
+  "devDependencies": {
+    "@tweakpane/core": "^1.0.9",
+    "esbuild": "^0.5.26",
+    "gh-pages": "^3.1.0",
+    "typescript": "^3.9.6"
+  }
 }
