@@ -59,6 +59,7 @@ class Config {
       firstFrameAsLastFrame: this.firstFrameAsLastFrame,
       keyframes: [...this.keyframes],
       fps: this.fps,
+      makeTilable: this.makeTilable,
     };
   }
   toKeyframe() {

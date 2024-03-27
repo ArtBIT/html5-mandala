@@ -243,34 +243,36 @@ class MandalaApp {
     let img = new Image();
     img.src = URL.createObjectURL(file);
     img.addEventListener("load", () => {
-      if (this.config.makeTilable) {
-        // make temporary canvas
-        const canvas = document.createElement("canvas");
-        const ctx = canvas.getContext("2d");
-        canvas.width = img.width * 2;
-        canvas.height = img.height * 2;
-        // draw image on the top left
-        ctx.drawImage(img, 0, 0);
-        // mirror image on the right
-        ctx.save();
-        ctx.translate(img.width, 0);
-        ctx.scale(-1, 1);
-        ctx.drawImage(img, -img.width, 0);
-        ctx.restore();
-        // mirror image on the bottom
-        ctx.save();
-        ctx.translate(0, img.height);
-        ctx.scale(1, -1);
-        ctx.drawImage(ctx.canvas, 0, -img.height);
-        ctx.restore();
-        img = ctx.canvas;
-      }
-
-      this.mandala.setPattern(this.stage.ctx.createPattern(img, "repeat"));
+      this.createPattern(img);
       this.config.file = file;
       this.gui.update();
       this.render();
     });
+  }
+  createPattern(img) {
+    if (this.config.makeTilable) {
+      // make temporary canvas
+      const canvas = document.createElement("canvas");
+      const ctx = canvas.getContext("2d");
+      canvas.width = img.width * 2;
+      canvas.height = img.height * 2;
+      // draw image on the top left
+      ctx.drawImage(img, 0, 0);
+      // mirror image on the right
+      ctx.save();
+      ctx.translate(img.width, 0);
+      ctx.scale(-1, 1);
+      ctx.drawImage(img, -img.width, 0);
+      ctx.restore();
+      // mirror image on the bottom
+      ctx.save();
+      ctx.translate(0, img.height);
+      ctx.scale(1, -1);
+      ctx.drawImage(ctx.canvas, 0, -img.height);
+      ctx.restore();
+      img = ctx.canvas;
+    }
+    this.mandala.setPattern(this.stage.ctx.createPattern(img, "repeat"));
   }
   render() {
     clearTimeout(this.renderTimeout);
