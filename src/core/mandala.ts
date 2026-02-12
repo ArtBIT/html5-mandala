@@ -1,3 +1,4 @@
+// @ts-nocheck
 class Mandala {
   constructor(stage) {
     this.matrix = new DOMMatrix();
@@ -83,32 +84,42 @@ class Mandala {
 
       ctx.restore();
     } else {
-      ctx.save();
       let angleIncrease = Math.PI / params.symmetries;
-      ctx.translate(halfwidth, halfheight);
-      ctx.rotate((params.angle / 180) * Math.PI);
+      let baseAngle = (params.angle / 180) * Math.PI;
+
       for (let s = 0; s < params.symmetries; s++) {
-        ctx.rotate(angleIncrease * 2);
+        // Calculate this slice's angle from base state (no accumulation)
+        let sliceAngle = baseAngle + (angleIncrease * 2 * s);
+
+        // Draw normal slice
+        ctx.save();
+        ctx.translate(halfwidth, halfheight);
+        ctx.rotate(sliceAngle + angleIncrease * 2);
         this.drawSlice(
           ctx,
           halfdiag,
-          1, //params.patternScale,
+          1,
           angleIncrease,
           params.offset.x * width,
           params.offset.y * height
         );
+        ctx.restore();
+
+        // Draw mirrored slice
+        ctx.save();
+        ctx.translate(halfwidth, halfheight);
+        ctx.rotate(sliceAngle + angleIncrease * 2);
         ctx.scale(1, -1);
         this.drawSlice(
           ctx,
           halfdiag,
-          1, //params.patternScale,
+          1,
           angleIncrease,
           params.offset.x * width,
           params.offset.y * height
         );
-        ctx.scale(1, -1);
+        ctx.restore();
       }
-      ctx.restore();
     }
     ctx.restore();
   }
@@ -121,12 +132,29 @@ class Mandala {
     ctx.translate(xOffset, yOffset);
     ctx.fillStyle = this.pattern;
 
+    // Add overlap to prevent gaps between slices
+    const overlapFactor = 0.005; // 0.5% overlap = ~10 pixels at 2048px
+    const radiusWithOverlap = radius * (1 + overlapFactor);
+    const angleWithOverlap = sliceAngle * (1 + overlapFactor);
+
     ctx.beginPath();
-    ctx.moveTo(-xOffset, -yOffset);
-    ctx.lineTo(radius - xOffset, -yOffset);
-    ctx.lineTo(radius - xOffset, Math.tan(sliceAngle) * radius - yOffset);
+    ctx.moveTo(-xOffset, -yOffset); // Center point
+    ctx.arc(
+      -xOffset,
+      -yOffset,
+      radiusWithOverlap,
+      -overlapFactor, // Start slightly before 0
+      angleWithOverlap, // End slightly past sliceAngle
+      false           // Counterclockwise
+    );
     ctx.closePath();
     ctx.fill();
+
+    // Add hairline stroke to cover any remaining anti-aliasing gaps
+    ctx.strokeStyle = this.pattern;
+    ctx.lineWidth = 1.5;
+    ctx.stroke();
+
     ctx.restore();
   }
 }

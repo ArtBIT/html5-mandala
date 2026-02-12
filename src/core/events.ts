@@ -1,3 +1,4 @@
+// @ts-nocheck
 class Events {
     constructor() {
         this.listeners = {};

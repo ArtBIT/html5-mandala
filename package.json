@@ -1,34 +1,50 @@
 {
   "name": "html5-mandala",
-  "version": "0.7.0",
-  "description": "Radial symmetry image effect using HTML5 canvas",
-  "main": "src/index.js",
-  "scripts": {
-    "deploy": "npm run build && gh-pages -d public",
-    "check": "tsc --noEmit -c tsconfig.json",
-    "dev": "esbuild --bundle src/main.ts --outfile=public/bundle.js --sourcemap",
-    "build": "esbuild --bundle src/main.ts --outfile=public/bundle.js --minify"
-  },
+  "version": "1.0.0",
+  "description": "Interactive mandala creator with timeline animation using React and HTML5 Canvas",
+  "type": "module",
+  "license": "MIT",
+  "author": "Djordje Ungar (ArtBIT)",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ArtBIT/html5-mandala.git"
+    "url": "https://github.com/ArtBIT/html5-mandala.git"
   },
-  "keywords": ["html5", "canvas", "symmetry", "radial-symmetry", "javascript"],
-  "author": "Djordje Ungar",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/ArtBIT/html5-mandala/issues"
+  "homepage": "https://artbit.github.io/html5-mandala/",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc -b && vite build",
+    "lint": "eslint .",
+    "preview": "vite preview",
+    "deploy": "npm run build && npx gh-pages -d dist"
   },
-  "homepage": "https://github.com/ArtBIT/html5-mandala#readme",
   "dependencies": {
-    "@tweakpane/plugin-essentials": "^0.1.4",
-    "tweakpane": "^3.0.8",
-    "webm-writer": "^1.0.0"
+    "@xzdarcy/react-timeline-editor": "^1.0.0",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "lucide-react": "^0.563.0",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
+    "react-resizable-panels": "^4.6.2",
+    "tailwind-merge": "^3.4.0",
+    "tailwindcss-animate": "^1.0.7",
+    "zustand": "^5.0.11"
   },
   "devDependencies": {
-    "@tweakpane/core": "^1.0.9",
-    "esbuild": "^0.5.26",
-    "gh-pages": "^5.0.0",
-    "typescript": "^3.9.6"
+    "@eslint/js": "^9.39.1",
+    "@types/node": "^24.10.1",
+    "@types/react": "^19.2.7",
+    "@types/react-dom": "^19.2.3",
+    "@vitejs/plugin-react": "^5.1.1",
+    "autoprefixer": "^10.4.24",
+    "eslint": "^9.39.1",
+    "eslint-plugin-react-hooks": "^7.0.1",
+    "eslint-plugin-react-refresh": "^0.4.24",
+    "gh-pages": "^6.3.0",
+    "globals": "^16.5.0",
+    "postcss": "^8.5.6",
+    "tailwindcss": "^3.4.19",
+    "typescript": "~5.9.3",
+    "typescript-eslint": "^8.48.0",
+    "vite": "^7.3.1"
   }
 }

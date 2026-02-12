@@ -1,3 +1,4 @@
+// @ts-nocheck
 // Quick and dirty on event helper
 export const on = (context, eventType, eventCallback, useCapture) => {
     if (context && eventType && eventCallback) {

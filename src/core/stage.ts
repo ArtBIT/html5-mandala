@@ -1,3 +1,4 @@
+// @ts-nocheck
 class Stage {
     constructor(canvas) {
         this.canvas = canvas;

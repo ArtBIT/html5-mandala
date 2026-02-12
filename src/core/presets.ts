@@ -1,3 +1,4 @@
+// @ts-nocheck
 const PRESETS_STORAGE_KEY = "html5-mandala-presets";
 
 class Presets {

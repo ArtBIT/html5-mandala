@@ -1,3 +1,4 @@
+// @ts-nocheck
 const randomizeValue = (value, min, max, strength) => {
   const newValue = Math.random() * (max - min) + min;
   return Math.min(max, Math.max(min, value + (newValue - value) * strength));

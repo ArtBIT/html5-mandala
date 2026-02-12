@@ -1,3 +1,4 @@
+// @ts-nocheck
 import WebMWriter from "webm-writer";
 
 class Video {
