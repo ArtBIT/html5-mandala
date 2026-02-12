@@ -1,73 +1,33 @@
-<!DOCTYPE html>
-<html>
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width">
-        <title>Mandala maker</title>
-        <style type="text/css" media="screen">
-            body {
-              background: #DDD;
-              display: flex;
-              min-height: 100vh;
-              justify-content: center;
-              align-items: center;
-            }
-            .stage-wrapper {
-              background: #BBB;
-              padding: 16px;
-              box-sizing: border-box;
-              box-shadow: inset 0px 0px 43px 0px rgba(0,0,0,0.75);
-            }
-            body.warning {
-              --tp-base-background-color: hsla(0, 80%, 40%, 1.00);
-              --tp-base-shadow-color: hsla(0, 0%, 0%, 0.2);
-              --tp-button-background-color: hsla(0, 0%, 100%, 1.00);
-              --tp-button-background-color-active: hsla(0, 0%, 85%, 1);
-              --tp-button-background-color-focus: hsla(0, 0%, 90%, 1.00);
-              --tp-button-background-color-hover: hsla(0, 0%, 95%, 1.00);
-              --tp-button-foreground-color: hsla(230, 20%, 11%, 1.00);
-              --tp-container-background-color: hsla(0, 0%, 0%, 0.20);
-              --tp-container-background-color-active: hsla(0, 0%, 0%, 0.35);
-              --tp-container-background-color-focus: hsla(0, 0%, 0%, 0.30);
-              --tp-container-background-color-hover: hsla(0, 0%, 0%, 0.25);
-              --tp-container-foreground-color: hsla(0, 0%, 100%, 0.90);
-              --tp-groove-foreground-color: hsla(0, 0%, 0%, 0.50);
-              --tp-input-background-color: hsla(0, 0%, 0%, 0.50);
-              --tp-input-background-color-active: hsla(0, 0%, 0%, 0.65);
-              --tp-input-background-color-focus: hsla(0, 0%, 0%, 0.60);
-              --tp-input-background-color-hover: hsla(0, 0%, 0%, 0.55);
-              --tp-input-foreground-color: hsla(0, 0%, 100%, 0.90);
-              --tp-label-foreground-color: hsla(0, 0%, 100%, 0.90);
-              --tp-monitor-background-color: hsla(0, 0%, 0%, 0.50);
-              --tp-monitor-foreground-color: hsla(0, 0%, 100%, 0.50);
-            }
-        </style>
-        <!-- Global site tag (gtag.js) - Google Analytics -->
-        <script async src="https://www.googletagmanager.com/gtag/js?id=UA-170132767-1"></script>
-        <script>
-            window.dataLayer = window.dataLayer || [];
-            function gtag(){dataLayer.push(arguments);}
-            gtag('js', new Date());
-            gtag('config', 'UA-170132767-1');
-        </script>
-        <script src="./bundle.js?6"></script>
-    </head>
-    <body>
-        <script>
-        </script>
-        <div class="stage-wrapper"><canvas id="stage" width="2048" height="2048" style="width:512px;height:512px"></canvas></div>
-        <a href='https://github.com/ArtBIT/html5-mandala' style='position:fixed;padding:5px 45px;width:128px;bottom:0px;left:-50px;-webkit-transform:rotate(45deg);-moz-transform:rotate(45deg);-ms-transform:rotate(45deg);transform:rotate(45deg);box-shadow:0 0 0 3px #aaaaaa, 0 0 20px -3px rgba(0, 0, 0, 0.5);text-shadow:0 0 0 #ffffff, 0 0 5px rgba(0, 0, 0, 0.3);background-color:#aaaaaa;color:#ffffff;font-size:13px;font-family:sans-serif;text-decoration:none;font-weight:bold;border:2px dotted #ffffff;-webkit-backface-visibility:hidden;letter-spacing:.5px;'>Fork me on GitHub</a>
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/html5-mandala/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-        <a href="https://www.buymeacoffee.com/artbit" style="position:absolute; bottom: 12px;">
-          <img
-            src="https://cdn.buymeacoffee.com/buttons/default-green.png"
-            height="30"
-            alt="Buy Me A Coffee"
-          />
-        </a>
-        <input id="patternFile" type="file" style="visibility:hidden" />
-        <script charset="utf-8">
-           new MandalaApp('#stage'); 
-        </script>
-    </body>
+    <!-- Primary Meta Tags -->
+    <title>Mandala Maker | Create Beautiful Symmetrical Art</title>
+    <meta name="title" content="Mandala Maker | Create Beautiful Symmetrical Art">
+    <meta name="description" content="Interactive mandala creator with timeline animation. Create stunning symmetrical patterns, animate with keyframes, and export as images or videos.">
+    <meta name="author" content="Djordje Ungar (ArtBIT)">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://artbit.github.io/html5-mandala/">
+    <meta property="og:title" content="Mandala Maker | Create Beautiful Symmetrical Art">
+    <meta property="og:description" content="Interactive mandala creator with timeline animation. Create stunning symmetrical patterns, animate with keyframes, and export as images or videos.">
+    <meta property="og:image" content="/html5-mandala/og-image.jpg">
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://artbit.github.io/html5-mandala/">
+    <meta name="twitter:title" content="Mandala Maker | Create Beautiful Symmetrical Art">
+    <meta name="twitter:description" content="Interactive mandala creator with timeline animation. Create stunning symmetrical patterns, animate with keyframes, and export as images or videos.">
+    <meta name="twitter:image" content="/html5-mandala/og-image.jpg">
+    <script type="module" crossorigin src="/html5-mandala/assets/index-CRysIFGq.js"></script>
+    <link rel="stylesheet" crossorigin href="/html5-mandala/assets/index-wXllbqG7.css">
+  </head>
+  <body>
+    <div id="root"></div>
+  </body>
 </html>
